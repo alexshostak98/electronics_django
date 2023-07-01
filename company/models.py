@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from company.error_messages import ERROR_MESSAGES
+from company.messages import ERROR_MESSAGES
 
 
 class Company(models.Model):
@@ -20,8 +20,11 @@ class Company(models.Model):
     company_type = models.CharField(max_length=50, choices=ELEMENT_TYPES)
     supplier = models.ForeignKey('self', on_delete=models.PROTECT, null=True, blank=True)
     debt_to_supplier = models.DecimalField(max_digits=11, decimal_places=2, blank=True, null=True)
-    create_date = models.DateField(auto_now_add=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
     level = models.PositiveSmallIntegerField()
+
+    class Meta:
+        verbose_name_plural = 'companies'
 
     def _factory_type_validate(self):
         self.level = 0
@@ -45,6 +48,12 @@ class Company(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
+    def get_model_name(self):
+        return self._meta.model_name
+
+    def get_model_app_label(self):
+        return self._meta.app_label
 
     def __str__(self):
         return f'{self.get_company_type_display()} - {self.name}'
