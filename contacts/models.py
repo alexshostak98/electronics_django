@@ -9,11 +9,20 @@ class Address(models.Model):
     house_number = models.CharField(max_length=50)
 
     class Meta:
-        unique_together = [('country', 'city', 'street', 'house_number')]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['country', 'city', 'street', 'house_number'],
+                name='unique_address',
+            ),
+        ]
         verbose_name_plural = 'addresses'
 
     def __str__(self):
-        full_address = [field for field in (self.country, self.city, self.street, self.house_number) if field]
+        full_address = [
+            field
+            for field in (self.country, self.city, self.street, self.house_number)
+            if field
+        ]
         return ", ".join(full_address)
 
 
@@ -22,7 +31,9 @@ class Email(models.Model):
     email = models.EmailField()
 
     class Meta:
-        unique_together = [('email', 'description')]
+        constraints = [
+            models.UniqueConstraint(fields=['email', 'description'], name='unique_email'),
+        ]
 
     def __str__(self):
         return f'{self.email} - {self.description}'
