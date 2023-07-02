@@ -19,6 +19,7 @@ class CompanyAdmin(admin.ModelAdmin):
     list_display_links = ['name']
     list_filter = ['contacts__address__city']
     actions = ['reset_debt_to_supplier']
+    ordering = ['level']
 
     def get_supplier_url(self, obj):
         supplier = obj.supplier
