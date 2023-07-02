@@ -25,16 +25,28 @@ class Company(models.Model):
 
     class Meta:
         verbose_name_plural = 'companies'
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(debt_to_supplier__gte=0),
+                name='positive_debt',
+                violation_error_message=ERROR_MESSAGES['positive_debt'],
+            )
+        ]
 
     def _factory_type_validate(self):
         self.level = 0
         if self.debt_to_supplier is not None:
             raise ValidationError({'debt_to_supplier': ERROR_MESSAGES['wrong_factory_debt']})
+        if self.supplier is not None:
+            raise ValidationError({'supplier': ERROR_MESSAGES['factory_supplier']})
 
     def _other_types_validate(self):
         if self.supplier:
             self.level = self.supplier.level + 1
-            if not self.debt_to_supplier:
+            if self.debt_to_supplier:
+                if self.debt_to_supplier < 0:
+                    raise ValidationError({'debt_to_supplier': ERROR_MESSAGES['positive_debt']})
+            else:
                 self.debt_to_supplier = 0
         else:
             raise ValidationError({'supplier': ERROR_MESSAGES['should_has_supplier']})
@@ -44,10 +56,6 @@ class Company(models.Model):
             self._factory_type_validate()
         else:
             self._other_types_validate()
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
 
     def get_model_name(self):
         return self._meta.model_name
