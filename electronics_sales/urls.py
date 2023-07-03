@@ -20,6 +20,6 @@ from api.router import api_router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('electronics-sales', include((api_router.urls, 'api'))),
+    path('electronics-sales/', include((api_router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
