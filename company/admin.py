@@ -2,7 +2,12 @@ from django.contrib import admin, messages
 from django.utils.html import format_html
 from django.urls import reverse
 from company.models import Company
+from contacts.models import Contacts
 from company.messages import SUCCESS_MESSAGES
+
+
+class ContactsInline(admin.TabularInline):
+    model = Contacts
 
 
 @admin.register(Company)
@@ -20,6 +25,7 @@ class CompanyAdmin(admin.ModelAdmin):
     list_filter = ['contacts__address__city']
     actions = ['reset_debt_to_supplier']
     ordering = ['level']
+    inlines = [ContactsInline]
 
     def get_supplier_url(self, obj):
         supplier = obj.supplier
