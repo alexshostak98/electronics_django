@@ -10,6 +10,8 @@ djangorestframework = "*"
 django-filter = "*"
 djangorestframework-simplejwt = "*"
 drf-spectacular = "*"
+qrcode = "*"
+celery = "*"
 
 [dev-packages]
 
