@@ -23,7 +23,7 @@ class Company(models.Model):
     debt_to_supplier = models.DecimalField(max_digits=11, decimal_places=2, blank=True, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     level = models.PositiveSmallIntegerField()
-    employees = models.ForeignKey(User, on_delete=models.PROTECT, related_name='company', blank=False, null=True)
+    employees = models.ManyToManyField(User, related_name='works')
 
     class Meta:
         verbose_name_plural = 'companies'
