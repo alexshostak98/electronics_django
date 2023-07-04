@@ -1,20 +1,21 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 from company.messages import ERROR_MESSAGES
 
 
 class Company(models.Model):
     FACTORY = 'FA'
-    DISTRIBUTOR = "DB"
-    DEALERSHIP = "DS"
-    RETAIL = "RT"
-    INDIVIDUAL = "IE"
+    DISTRIBUTOR = 'DB'
+    DEALERSHIP = 'DS'
+    RETAIL = 'RT'
+    INDIVIDUAL = 'IE'
     ELEMENT_TYPES = [
-        (FACTORY, "Factory"),
-        (DISTRIBUTOR, "Distributor"),
-        (DEALERSHIP, "Dealership"),
-        (RETAIL, "Retail"),
-        (INDIVIDUAL, "Individual"),
+        (FACTORY, 'Factory'),
+        (DISTRIBUTOR, 'Distributor'),
+        (DEALERSHIP, 'Dealership'),
+        (RETAIL, 'Retail'),
+        (INDIVIDUAL, 'Individual'),
     ]
     name = models.CharField(max_length=50)
     company_type = models.CharField(max_length=50, choices=ELEMENT_TYPES)
@@ -22,6 +23,7 @@ class Company(models.Model):
     debt_to_supplier = models.DecimalField(max_digits=11, decimal_places=2, blank=True, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     level = models.PositiveSmallIntegerField()
+    employees = models.ForeignKey(User, on_delete=models.PROTECT, related_name='company', blank=False, null=True)
 
     class Meta:
         verbose_name_plural = 'companies'
