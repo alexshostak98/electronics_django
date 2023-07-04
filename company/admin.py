@@ -4,6 +4,8 @@ from django.urls import reverse
 from company.models import Company
 from contacts.models import Contacts
 from company.messages import SUCCESS_MESSAGES
+from company.constants import MAX_COMPANY_NUMBER_WITHOUT_ASYNC
+from company.tasks import reset_debt_to_supplier
 
 
 class ContactsInline(admin.TabularInline):
@@ -43,7 +45,12 @@ class CompanyAdmin(admin.ModelAdmin):
     get_supplier_url.short_description = 'Supplier'
 
     def reset_debt_to_supplier(self, request, queryset):
-        queryset.filter(supplier__isnull=False).update(debt_to_supplier=0)
+        queryset = queryset.filter(supplier__isnull=False)
+        if queryset.count() > MAX_COMPANY_NUMBER_WITHOUT_ASYNC:
+            company_ids = queryset.values_list('id', flat=True)
+            reset_debt_to_supplier.delay(list(company_ids))
+        else:
+            queryset.update(debt_to_supplier=0)
         self.message_user(
             request,
             message=SUCCESS_MESSAGES['reset_debt'],

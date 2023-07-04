@@ -5,12 +5,12 @@ from django.core.mail import EmailMessage
 from company.models import Company
 from company.qr_code import generate_qr_code
 from electronics_sales.celery import app
-
-RANDOM_INCREASE_MIN = 5
-RANDOM_INCREASE_MAX = 500
-
-RANDOM_REDUCE_MIN = 100
-RANDOM_REDUCE_MAX = 10000
+from company.constants import (
+    RANDOM_INCREASE_MIN,
+    RANDOM_INCREASE_MAX,
+    RANDOM_REDUCE_MAX,
+    RANDOM_REDUCE_MIN,
+)
 
 
 @shared_task()
@@ -23,6 +23,11 @@ def send_email_with_qr_code(text_for_qr_code, company_name, emails):
     )
     email_message.attach_file(qr_code_image_path, mimetype='image/png')
     email_message.send()
+
+
+@shared_task()
+def reset_debt_to_supplier(company_ids):
+    Company.objects.filter(id__in=company_ids).update(debt_to_supplier=0)
 
 
 @app.task
