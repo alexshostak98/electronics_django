@@ -30,7 +30,9 @@ class CreateUpdateCompanySerializer(serializers.ModelSerializer):
             level = validated_data['supplier'].level + 1
             if not validated_data['debt_to_supplier']:
                 validated_data['debt_to_supplier'] = 0
+        creator_employee = self.context.get('request').user
         company = Company.objects.create(level=level, **validated_data)
+        company.employees.set([creator_employee])
         return company
 
     def update(self, instance, validated_data):
