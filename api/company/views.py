@@ -9,6 +9,8 @@ from company.models import Company
 from contacts.models import Email
 from company.messages import SUCCESS_MESSAGES, ERROR_MESSAGES
 from company.tasks import send_email_with_qr_code
+from django_filters.rest_framework import DjangoFilterBackend
+from api.company.filters import IsEmployeeFilterBackend
 
 
 class CompanyViewSet(viewsets.ModelViewSet):
@@ -19,13 +21,15 @@ class CompanyViewSet(viewsets.ModelViewSet):
         'list': serializers.CompanySerializer,
     }
     filterset_class = CompanyFilter
+    filter_backends = [IsEmployeeFilterBackend, DjangoFilterBackend]
+
 
     def get_serializer_class(self):
         return self.action_serializers.get(self.action, self.serializer_class)
 
     @action(methods=['get'], detail=False, url_path='debt-above-average')
     def debt_above_average(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
+        queryset = self.filter_queryset(self.get_queryset())
         average_debt = queryset.exclude(debt_to_supplier__isnull=True).aggregate(avg_debt=Avg('debt_to_supplier'))
         companies_with_above_average_debt = queryset.filter(debt_to_supplier__gt=average_debt['avg_debt'])
         return Response(self.get_serializer(companies_with_above_average_debt, many=True).data)
