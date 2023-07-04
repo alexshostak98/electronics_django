@@ -12,6 +12,7 @@ djangorestframework-simplejwt = "*"
 drf-spectacular = "*"
 qrcode = "*"
 celery = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
