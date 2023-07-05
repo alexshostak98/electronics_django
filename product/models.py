@@ -17,7 +17,7 @@ class Product(models.Model):
         ]
 
     def clean(self):
-        first_company_creation_date = Company.objects.get(level__exact=0).creation_date.date()
+        first_company_creation_date = Company.objects.get(supplier__isnull=True).creation_date.date()
         current_date = datetime.date.today()
         if self.market_launch_date > current_date:
             raise ValidationError({'market_launch_date': ERROR_MESSAGES['gt_current_date']})

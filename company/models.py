@@ -22,7 +22,6 @@ class Company(models.Model):
     supplier = models.ForeignKey('self', on_delete=models.PROTECT, null=True, blank=True)
     debt_to_supplier = models.DecimalField(max_digits=11, decimal_places=2, blank=True, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
-    level = models.PositiveSmallIntegerField()
     employees = models.ManyToManyField(User, related_name='works')
 
     class Meta:
@@ -36,7 +35,6 @@ class Company(models.Model):
         ]
 
     def _factory_type_validate(self):
-        self.level = 0
         if self.debt_to_supplier is not None:
             raise ValidationError({'debt_to_supplier': ERROR_MESSAGES['wrong_factory_debt']})
         if self.supplier is not None:
@@ -44,7 +42,6 @@ class Company(models.Model):
 
     def _other_types_validate(self):
         if self.supplier:
-            self.level = self.supplier.level + 1
             if self.debt_to_supplier:
                 if self.debt_to_supplier < 0:
                     raise ValidationError({'debt_to_supplier': ERROR_MESSAGES['positive_debt']})

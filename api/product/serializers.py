@@ -17,7 +17,7 @@ class ProductSerializer(serializers.ModelSerializer):
         ]
 
     def validate_market_launch_date(self, value):
-        first_company_creation_date = Company.objects.get(level__exact=0).creation_date.date()
+        first_company_creation_date = Company.objects.get(supplier__isnull=True).creation_date.date()
         current_date = datetime.date.today()
         if value > current_date:
             raise serializers.ValidationError(ERROR_MESSAGES['gt_current_date'])

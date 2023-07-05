@@ -15,18 +15,17 @@ class ContactsInline(admin.TabularInline):
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
     list_display = (
-        'level',
         'name',
         'company_type',
         'debt_to_supplier',
         'creation_date',
         'get_supplier_url'
     )
-    exclude = ('level', 'creation_date')
+    exclude = ('creation_date',)
     list_display_links = ['name']
     list_filter = ['contacts__address__city']
     actions = ['reset_debt_to_supplier']
-    ordering = ['level']
+    ordering = ['-creation_date']
     inlines = [ContactsInline]
 
     def get_supplier_url(self, obj):

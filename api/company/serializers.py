@@ -14,7 +14,7 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-        fields = ['pk', 'name', 'company_type', 'supplier', 'debt_to_supplier', 'creation_date', 'level']
+        fields = ['pk', 'name', 'company_type', 'supplier', 'debt_to_supplier', 'creation_date']
 
 
 class CompanyDetailSerializer(CompanySerializer):
@@ -30,7 +30,6 @@ class CompanyDetailSerializer(CompanySerializer):
             'supplier',
             'debt_to_supplier',
             'creation_date',
-            'level',
             'products',
             'contacts',
             'employees',
@@ -40,18 +39,15 @@ class CompanyDetailSerializer(CompanySerializer):
 class CreateUpdateCompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ['pk', 'name', 'company_type', 'supplier', 'debt_to_supplier', 'creation_date', 'level']
-        read_only_fields = ['level', 'creation_date']
+        fields = ['pk', 'name', 'company_type', 'supplier', 'debt_to_supplier', 'creation_date']
+        read_only_fields = ['creation_date']
 
     def create(self, validated_data):
-        if validated_data['company_type'] == 'FA':
-            level = 0
-        else:
-            level = validated_data['supplier'].level + 1
+        if validated_data['company_type'] != 'FA':
             if not validated_data['debt_to_supplier']:
                 validated_data['debt_to_supplier'] = 0
         creator_employee = self.context.get('request').user
-        company = Company.objects.create(level=level, **validated_data)
+        company = Company.objects.create(**validated_data)
         company.employees.set([creator_employee])
         return company
 
