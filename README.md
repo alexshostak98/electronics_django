@@ -31,3 +31,7 @@ Web application of the network for the sale of electronics
 1. Для отправки писем используется SMPT сервер mail.ru
 2. В `EMAIL_HOST_PASSWORD` из .env файла необходимо указать пароль для внешних приложений, как
    сгенерировать - https://help.mail.ru/mail/security/protection/external
+
+## Endpoints
+
+Ссылка на endpoints http://127.0.0.1:8000/api/docs/
