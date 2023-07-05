@@ -1,10 +1,16 @@
 from rest_framework import serializers
 from company.models import Company
 from company.messages import ERROR_MESSAGES
+from api.employee.serializers import EmployeeSerializer
+from api.product.serializers import ProductSerializer
 
 
 class CompanySerializer(serializers.ModelSerializer):
-    supplier = serializers.HyperlinkedRelatedField(many=False, read_only=True, view_name='api:company-detail')
+    supplier = serializers.HyperlinkedRelatedField(
+        many=False,
+        read_only=True,
+        view_name='api:company-detail',
+    )
 
     class Meta:
         model = Company
@@ -12,9 +18,23 @@ class CompanySerializer(serializers.ModelSerializer):
 
 
 class CompanyDetailSerializer(CompanySerializer):
+    employees = EmployeeSerializer(many=True)
+    products = ProductSerializer(many=True)
+
     class Meta:
         model = Company
-        fields = ['pk', 'name', 'company_type', 'supplier', 'debt_to_supplier', 'creation_date', 'level', 'products']
+        fields = [
+            'pk',
+            'name',
+            'company_type',
+            'supplier',
+            'debt_to_supplier',
+            'creation_date',
+            'level',
+            'products',
+            'contacts',
+            'employees',
+        ]
 
 
 class CreateUpdateCompanySerializer(serializers.ModelSerializer):
