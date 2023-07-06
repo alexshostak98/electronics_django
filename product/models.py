@@ -7,6 +7,7 @@ import datetime
 
 class Product(models.Model):
     name = models.CharField(max_length=25)
+    product_type = models.CharField(max_length=150, default='electronics')
     model = models.CharField(max_length=100)
     market_launch_date = models.DateField()
     company = models.ManyToManyField(Company, related_name='products')
