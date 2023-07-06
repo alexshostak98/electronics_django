@@ -15,6 +15,13 @@ Web application of the network for the sale of electronics
 2. Создать .pgpass файл и поместить в корень папки проекта.
    Шаблоны для создания файлов - https://docs.djangoproject.com/en/4.1/ref/databases/#postgresql-connection-settings
 3. После подключения к БД выполнить команду `python manage.py migrate`
+4. Для заполнения таблиц тестовыми данными выполнить следующие команды:
+   - `python3 manage.py create_addresses`
+   - `python3 manage.py create_emails`
+   - `python3 manage.py create_employees`
+   - `python3 manage.py create_companies`
+   - `python3 manage.py create_products`
+   - `python3 manage.py create_contacts`
 
 ## Celery and RabbitMQ
 
