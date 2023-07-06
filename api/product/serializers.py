@@ -8,7 +8,7 @@ from product.messages import ERROR_MESSAGES
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = '__all__'
+        exclude = ['company']
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=Product.objects.all(),
