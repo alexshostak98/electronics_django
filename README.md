@@ -4,7 +4,7 @@ Web application of the network for the sale of electronics
 
 ## Установка
 
-0. Склиноровать проект
+0. Склонировать проект
 1. `pipenv install`
 2. Заполнить .env файл по шаблону .env_example
 
