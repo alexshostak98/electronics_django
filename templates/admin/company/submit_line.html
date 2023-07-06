@@ -1,4 +1,5 @@
 {% load i18n admin_urls %}
+{% load static %}
 <div class="submit-row">
 {% block submit-row %}
 {% if show_save %}<input type="submit" value="{% translate 'Save' %}" class="default" name="_save">{% endif %}
@@ -6,6 +7,7 @@
 {% if show_save_and_add_another %}<input type="submit" value="{% translate 'Save and add another' %}" name="_addanother">{% endif %}
 {% if show_save_and_continue %}<input type="submit" value="{% if can_change %}{% translate 'Save and continue editing' %}{% else %}{% translate 'Save and view' %}{% endif %}" name="_continue">{% endif %}
     <input id='copy_emails_btn' type='button' name='copy_to_clipboard' value='Copy emails'>
+    <script src="{% static 'company/js/button_copy.js' %}"></script>
 {% if show_close %}
     {% url opts|admin_urlname:'changelist' as changelist_url %}
     <a href="{% add_preserved_filters changelist_url %}" class="closelink">{% translate 'Close' %}</a>
