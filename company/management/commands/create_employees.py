@@ -21,7 +21,7 @@ class Command(BaseCommand):
             password = User.objects.make_random_password()
             employee.set_password(password)
             employees.append(employee)
-            employees_with_password.append({'user': user_name, 'password': '1234qe'})
+            employees_with_password.append({'user': user_name, 'password': password})
         User.objects.bulk_create(employees)
         self._write_employees_data_to_csv(employees_with_password)
         self.stdout.write(self.style.SUCCESS(f'{len(employees)} row was successfully added to table'))
